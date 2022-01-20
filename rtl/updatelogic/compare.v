@@ -1,13 +1,13 @@
 module compare(
-    input [4:0] sk,//key is used to write a rule 
-    input [4:0] count,
-    input[7:0] srl_ce,
-    input wclk,
-    input wr,
-    output[7:0] q,
-    output [4:0] addr
-    );
-wire comparison; 
+	input  wire [4:0] sk,//key is used to write a rule
+	input  wire [4:0] count,
+	input  wire [7:0] srl_ce,
+	input  wire  wclk,
+	input  wire  wr,
+	output[7:0] q,
+	output [4:0] addr
+	);
+wire comparison;
 
 (* dont_touch = "true" *) mux5bit mux_inst (count,sk,wr,addr);
 (* dont_touch = "true" *) comparator #(5) comparator_inst(sk,count,comparison);
