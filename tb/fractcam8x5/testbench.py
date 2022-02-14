@@ -25,66 +25,72 @@ from cocotb.result import TestFailure, TestSuccess
 from cocotb_bus.drivers import BitDriver
 
 
-class and0_TB(object):
+class FracTCAM8x5_TB(object):
 	def __init__(self, dut, debug=True):
 		level = logging.DEBUG if debug else logging.WARNING
-		self.log = logging.getLogger("TB")
+		self.log = logging.getLogger("fractcamTB")
 		self.log.setLevel(level)
 
 		self.dut = dut
 		self.expected_output = []
-		self.WIDTH = self.dut.WIDTH.value
-		self.DEPTH = self.dut.DEPTH.value
-		self.log.debug("WIDTH = %s", repr(self.WIDTH))
-		self.log.debug("DEPTH = %s", repr(self.DEPTH))
+		self.TCAM_DEPTH = self.dut.TCAM_DEPTH.value
+		self.TCAM_WIDTH = self.dut.TCAM_WIDTH.value
+		self.log.debug("TCAM_WIDTH = %s", repr(self.TCAM_WIDTH))
+		self.log.debug("TCAM_DEPTH = %s", repr(self.TCAM_DEPTH))
 
 		cocotb.start_soon(Clock(dut.clk, 4, 'ns').start())
 
-	def model(self, din):
+	def model(self, din): 	# TODO: 
 		"""Model of FracTCAM"""
-		din = int.from_bytes(din, byteorder='big')
-		din_i = []
-		out_1 = din
-		for i in range(self.WIDTH):
-			din_i.append(din >> (i*self.DEPTH))
-			out_1 = out_1 & din_i[i]
-		return out_1
+		addr = 0
+		self.expected_output.append(addr)
 
 	async def reset(self):
-		self.dut.in_1.value = 0
+		self.dut.search_key.value = 0
+		self.dut.wr_enable.value = 0
+		self.dut.rules.value = 0
 		self.log.info("Reset begin...")
 		self.dut.rst.setimmediatevalue(0)
-		# await RisingEdge(self.dut.clk)
-		# await RisingEdge(self.dut.clk)
-		# self.dut.rst <= 1
-		# await RisingEdge(self.dut.clk)
-		# await RisingEdge(self.dut.clk)
-		# self.dut.rst.value = 0
+		await RisingEdge(self.dut.clk)
+		await RisingEdge(self.dut.clk)
+		self.dut.rst <= 1
+		await RisingEdge(self.dut.clk)
+		await RisingEdge(self.dut.clk)
+		self.dut.rst.value = 0
 		await RisingEdge(self.dut.clk)
 		await RisingEdge(self.dut.clk)
 		self.log.info("reset end")
 
 
 async def run_test(dut, data_in=None, config_coroutine=None):
-	tb = and0_TB(dut)
+	tb = FracTCAM8x5_TB(dut)
 	await tb.reset()
 	# if config_coroutine is not None:	# TODO: config match rules
 	# cocotb.fork(config_coroutine(tb.csr))
 
-	len_1 = int(tb.DEPTH * tb.WIDTH / 8)
-	tb.dut.in_1.value = int.from_bytes(incrementing_payload(len_1,0xFF,0xFF), byteorder='big')
+	tb.dut.search_key.value = 0x0
+	tb.dut.rules.value = 0xFF
+	tb.dut.wr_enable.value = 1
+	await RisingEdge(tb.dut.clk)
+	tb.dut.wr_enable.value = 0
+	await RisingEdge(tb.dut.clk)
+	tb.dut.search_key.value = 0x1F % (1 << tb.TCAM_WIDTH)
 	await RisingEdge(tb.dut.clk)
 
-	for din in [data_in(len_1) for x in range(0, 0xFF, 0xF)]:
-		tb.dut.in_1.value = int.from_bytes(din, byteorder='big')
+	for din in data_in(0x21, 1, 0x0, 0x1F):
+		tb.dut.search_key.value = din % (1 << tb.TCAM_WIDTH)
 		await RisingEdge(tb.dut.clk)
-		out_1 = tb.dut.out_1.value
-		assert out_1 == tb.model(din)
-		tb.log.debug("AND = %s", repr(out_1))
+		tb.log.debug("match = %s", repr(1))
+		tb.log.debug(tb.dut.match)
+	
+	await RisingEdge(tb.dut.clk)
 
 
-def incrementing_payload(length=8, min=1, max=255):
-	return bytes(itertools.islice(itertools.cycle(range(min, max+1)), length))
+
+def incrementing_payload(times=4, length=8, min=1, max=255):
+	data_set = bytes(itertools.islice(itertools.cycle(range(min, max+1)), times*length))
+	for i in range(times):
+		yield data_set[i] 
 
 
 def random_payload(length=8, min=0, max=0x100):
@@ -96,6 +102,6 @@ def random_payload(length=8, min=0, max=0x100):
 if cocotb.SIM_NAME:
 	factory = TestFactory(run_test)
 	# factory.add_option("data_in", [random_payload, incrementing_payload])
-	factory.add_option("data_in", [random_payload])
+	factory.add_option("data_in", [incrementing_payload])
 	factory.add_option("config_coroutine", [None])
 	factory.generate_tests()

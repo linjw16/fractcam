@@ -1,12 +1,12 @@
-#
-# Created on Wed Jan 05 2022
-#
+# 
+# Created on Tue Jan 18 2022
+# 
 # Copyright (c) 2022 IOA UCAS
-#
-# @Filename:	Makefile
-# @Author:		Jiawei Lin
-# @Last edit:	10:24:40
-#
+# 
+# @Filename:	 Makefile
+# @Author:		 Jiawei Lin
+# @Last edit:	 10:13:11
+# 
 
 TOPLEVEL_LANG = verilog
 
@@ -16,30 +16,16 @@ WAVES ?= 1
 COCOTB_HDL_TIMEUNIT = 1ns
 COCOTB_HDL_TIMEPRECISION = 1ps
 
-DUT	= fractcam_top
+DUT	= fractcam8x5
 TOPLEVEL = $(DUT)
 MODULE	= testbench
 
 # FracTCAM
-VERILOG_SOURCES += ../../rtl/$(TOPLEVEL).v
-VERILOG_SOURCES += ../../rtl/cont_signal.v
-VERILOG_SOURCES += ../../rtl/counter_srl.v
-VERILOG_SOURCES += ../../rtl/updatelogic/update_logic.v
-VERILOG_SOURCES += ../../rtl/updatelogic/comparator.v
-VERILOG_SOURCES += ../../rtl/updatelogic/counter.v
-VERILOG_SOURCES += ../../rtl/updatelogic/mux5bit.v
-VERILOG_SOURCES += ../../rtl/updatelogic/compare.v
-VERILOG_SOURCES += ../../rtl/updatelogic/Demux.v
-VERILOG_SOURCES += ../../rtl/updatelogic/srl_rf.v
-VERILOG_SOURCES += ../../rtl/fractcam/andD2.v
-VERILOG_SOURCES += ../../rtl/fractcam/andD2slice.v
-VERILOG_SOURCES += ../../rtl/fractcam/andD6.v
-VERILOG_SOURCES += ../../rtl/fractcam/and6.v
-VERILOG_SOURCES += ../../rtl/fractcam/andD6slice.v
-VERILOG_SOURCES += ../../rtl/fractcam/DBLOCK32X5.v
-VERILOG_SOURCES += ../../rtl/fractcam/DBLOCK64x5.v
-VERILOG_SOURCES += ../../rtl/fractcam/frac_tcam.v
-VERILOG_SOURCES += ../../rtl/fractcam/fractcam1x6.v
+# VERILOG_SOURCES += ../../rtl/fractcam/fractcam.v
+VERILOG_SOURCES += ../../rtl/fractcam/fractcam8x5.v
+# VERILOG_SOURCES += ../../rtl/fractcam/and0.v
+# VERILOG_SOURCES += ../../rtl/fractcam/and6.v
+# VERILOG_SOURCES += ../../rtl/fractcam/andD6slice.v
 # FracTCAM sim
 VERILOG_SOURCES += ../../rtl/sim/FDRE.v
 VERILOG_SOURCES += ../../rtl/sim/LUT6.v
@@ -47,8 +33,8 @@ VERILOG_SOURCES += ../../rtl/sim/RAM32M.v
 VERILOG_SOURCES += ../../rtl/sim/SRLC32E.v
 
 # module parameters
-export PARAM_TCAM_DEPTH ?= 1024
-export PARAM_TCAM_WIDTH ?= 160
+export PARAM_TCAM_DEPTH ?= 8
+export PARAM_TCAM_WIDTH ?= 5
 
 ifeq ($(SIM), icarus)
 	PLUSARGS += -fst
@@ -72,7 +58,6 @@ else ifeq ($(SIM), verilator)
 	ifeq ($(WAVES), 1)
 		COMPILE_ARGS += --trace-fst
 	endif
-
 endif
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
@@ -88,3 +73,4 @@ iverilog_dump.v:
 clean::
 	@rm -rf iverilog_dump.v
 	@rm -rf dump.fst $(TOPLEVEL).fst
+	@rm -rf *.xml .fuse*

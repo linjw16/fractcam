@@ -69,7 +69,7 @@ async def run_test(dut, config=None):
 		tb.log.debug("read_out = %s", DOA)
 		tb.log.debug("read_out = %s", repr(DOA))
 
-	await tb.write(0x10, 3, 3, 3, 3)
+	await tb.write(0x10, 0b10, 0b10, 0b10)
 
 	for ADDRB in range(32):
 		tb.dut.ADDRB.value = ADDRB

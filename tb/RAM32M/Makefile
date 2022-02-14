@@ -24,10 +24,10 @@ MODULE	= testbench
 VERILOG_SOURCES += ../../rtl/sim/$(TOPLEVEL).v
 
 # module parameters
-export PARAM_INIT_A ?= $(shell printf %d 0xFFFF)
-export PARAM_INIT_B ?= $(shell printf %d 0xFFFF)
-export PARAM_INIT_C ?= $(shell printf %d 0xFFFF)
-export PARAM_INIT_D ?= $(shell printf %d 0xFFFF)
+export PARAM_INIT_A ?= $(shell printf %d 0x7FFFFFFFFFFFFFFF)
+export PARAM_INIT_B ?= $(shell printf %d 0x7FFFFFFFFFFFFFFF)
+export PARAM_INIT_C ?= $(shell printf %d 0x7FFFFFFFFFFFFFFF)
+export PARAM_INIT_D ?= $(shell printf %d 0x7FFFFFFFFFFFFFFF)
 
 ifeq ($(SIM), icarus)
 	PLUSARGS += -fst
@@ -71,3 +71,4 @@ iverilog_dump.v:
 clean::
 	@rm -rf iverilog_dump.v
 	@rm -rf dump.fst $(TOPLEVEL).fst
+	@rm -rf *.xml .fuse*

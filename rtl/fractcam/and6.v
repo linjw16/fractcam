@@ -9,6 +9,9 @@
  */
 `timescale 1ns / 1ps
 
+/*
+ * And gate with input width at most 6
+ */
 module and6 #(
 	parameter DEPTH = 64,
 	parameter WIDTH = 6
@@ -62,9 +65,9 @@ generate
 					in[0*D+i*4+3 : 0*D+i*4],
 					in[1*D+i*4+3 : 1*D+i*4],
 					in[2*D+i*4+3 : 2*D+i*4],
-					in[3*D+i*4+3 : 3*D+i*4],
-					in[4*D+i*4+3 : 4*D+i*4],
-					in[5*D+i*4+3 : 5*D+i*4],
+					4'hF,
+					4'hF,
+					4'hF,
 					out[i*4+3 : i*4]
 				);
 			end

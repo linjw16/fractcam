@@ -1,5 +1,8 @@
 `timescale 1ns / 1ps
 
+/*
+ * AND gate with input width at most 6, implemented in a SLICEM with four 6-LUT. 
+ */
 module andD6slice #(
 	parameter INIT = 64'h8000_0000_0000_0000
 )(

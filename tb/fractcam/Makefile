@@ -16,11 +16,16 @@ WAVES ?= 1
 COCOTB_HDL_TIMEUNIT = 1ns
 COCOTB_HDL_TIMEPRECISION = 1ps
 
-DUT	= and0
-TOPLEVEL = dut
+DUT	= fractcam_top
+TOPLEVEL = $(DUT)
 MODULE	= testbench
 
-VERILOG_SOURCES += dut.v
+# FracTCAM
+VERILOG_SOURCES += ./$(TOPLEVEL).v
+VERILOG_SOURCES += ../../rtl/fractcam/Demux.v
+VERILOG_SOURCES += ../../rtl/fractcam/update_logic.v
+VERILOG_SOURCES += ../../rtl/fractcam/fractcam.v
+VERILOG_SOURCES += ../../rtl/fractcam/fractcam8x5.v
 VERILOG_SOURCES += ../../rtl/fractcam/and0.v
 VERILOG_SOURCES += ../../rtl/fractcam/and6.v
 VERILOG_SOURCES += ../../rtl/fractcam/andD6slice.v
@@ -31,14 +36,14 @@ VERILOG_SOURCES += ../../rtl/sim/RAM32M.v
 VERILOG_SOURCES += ../../rtl/sim/SRLC32E.v
 
 # module parameters
-export PARAM_DEPTH ?= 8
-export PARAM_WIDTH ?= 12
+export PARAM_TCAM_DEPTH ?= 16
+export PARAM_TCAM_WIDTH ?= 5
 
 ifeq ($(SIM), icarus)
 	PLUSARGS += -fst
 
-	COMPILE_ARGS += -P $(TOPLEVEL).DEPTH=$(PARAM_DEPTH)
-	COMPILE_ARGS += -P $(TOPLEVEL).WIDTH=$(PARAM_WIDTH)
+	COMPILE_ARGS += -P $(TOPLEVEL).TCAM_DEPTH=$(PARAM_TCAM_DEPTH)
+	COMPILE_ARGS += -P $(TOPLEVEL).TCAM_WIDTH=$(PARAM_TCAM_WIDTH)
 
 	ifeq ($(WAVES), 1)
 		VERILOG_SOURCES += iverilog_dump.v
@@ -48,15 +53,14 @@ ifeq ($(SIM), icarus)
 else ifeq ($(SIM), verilator)
 	COMPILE_ARGS += -Wno-SELRANGE -Wno-WIDTH
 
-	COMPILE_ARGS += -GDEPTH=$(PARAM_DEPTH)
-	COMPILE_ARGS += -GWIDTH=$(PARAM_WIDTH)
+	COMPILE_ARGS += -GTCAM_DEPTH=$(PARAM_TCAM_DEPTH)
+	COMPILE_ARGS += -GTCAM_WIDTH=$(PARAM_TCAM_WIDTH)
 
 	# COMPILE_ARGS += -I $(HEADER_FILES)
 
 	ifeq ($(WAVES), 1)
 		COMPILE_ARGS += --trace-fst
 	endif
-
 endif
 
 include $(shell cocotb-config --makefiles)/Makefile.sim

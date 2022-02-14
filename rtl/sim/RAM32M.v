@@ -58,18 +58,18 @@ always @(*) begin
 	LUT5_D_H_next = LUT5_D_H_reg;
 	LUT5_D_L_next = LUT5_D_L_reg;
 	if (WE) begin
-		LUT5_A_H_next[ADDRD] = DIA;
-		LUT5_A_L_next[ADDRD] = DIA;
-		LUT5_B_H_next[ADDRD] = DIB;
-		LUT5_B_L_next[ADDRD] = DIB;
-		LUT5_C_H_next[ADDRD] = DIC;
-		LUT5_C_L_next[ADDRD] = DIC;
-		LUT5_D_H_next[ADDRD] = DID;
-		LUT5_D_L_next[ADDRD] = DID;
+		LUT5_A_H_next[ADDRD] = DIA[1];
+		LUT5_A_L_next[ADDRD] = DIA[0];
+		LUT5_B_H_next[ADDRD] = DIB[1];
+		LUT5_B_L_next[ADDRD] = DIB[0];
+		LUT5_C_H_next[ADDRD] = DIC[1];
+		LUT5_C_L_next[ADDRD] = DIC[0];
+		LUT5_D_H_next[ADDRD] = DID[1];
+		LUT5_D_L_next[ADDRD] = DID[0];
 	end
 end
 
-always @(WCLK) begin	
+always @(posedge(WCLK)) begin	
 	LUT5_A_H_reg <= LUT5_A_H_next;
 	LUT5_A_L_reg <= LUT5_A_L_next;
 	LUT5_B_H_reg <= LUT5_B_H_next;

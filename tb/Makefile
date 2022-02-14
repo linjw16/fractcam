@@ -1,10 +1,10 @@
 
 TOPTARGETS := all clean
 
-SUBDIRS := $(wildcard */.))
+SUBDIRS := $(wildcard */.)
 
 .PHONY: $(TOPTARGETS) $(SUBDIRS)
 
 $(TOPTARGETS): $(SUBDIRS)
 $(SUBDIRS):
-	$(MAKE) -C $@ $(MAKECMDGOALS
+	$(MAKE) -C $@ $(MAKECMDGOALS)

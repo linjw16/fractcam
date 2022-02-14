@@ -31,7 +31,7 @@ always @(*) begin
 	Q_next = {Q_reg[30:0], D};
 end
 
-always @(CLK) begin
+always @(posedge(CLK)) begin
 	if (CE) begin
 		Q_reg <= Q_next;
 	end

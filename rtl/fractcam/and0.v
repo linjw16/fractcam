@@ -13,7 +13,7 @@
 `default_nettype none
 
 /*
- * FracTCAM with match table and output and gate. 
+ * FracTCAM AND gate. Three levels 6AND support at most 6^3 = 216 SLICEM columns, i.e. 216 × 5 = 1080 TCAM width.  
  */
 module and0 #(
 	parameter WIDTH = 5,
