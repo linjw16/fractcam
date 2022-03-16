@@ -70,3 +70,4 @@ clean::
 	@rm -rf iverilog_dump.v
 	@rm -rf dump.fst $(TOPLEVEL).fst
 	@rm -rf *.xml .fuse*
+	@rm -rf __pycache__
