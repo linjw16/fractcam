@@ -5,7 +5,11 @@
  */
 module fractcam8x5 #(
 	parameter TCAM_WIDTH = 5,
-	parameter TCAM_DEPTH = 8
+	parameter TCAM_DEPTH = 8,
+	parameter INIT_A = 64'b0,
+	parameter INIT_B = 64'b0,
+	parameter INIT_C = 64'b0,
+	parameter INIT_D = 64'b0
 ) (
 	input  wire clk,
 	input  wire rst,
@@ -27,6 +31,8 @@ initial begin
 end
 
 wire [3:0] o5,o6;
+localparam DEBUG_WIDTH = 8;
+wire [DEBUG_WIDTH-1:0] debug;
 
 /*
  * RAM32M 		: In order to incorporate this function into the design,
@@ -43,12 +49,12 @@ wire [3:0] o5,o6;
  * Virtex-7
  * Xilinx HDL Language Template, version 2016.3
  */
-(* H_SET = "uset0", RLOC = "X0Y0" *) (* dont_touch = "true" *)
+(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */
 RAM32M #(
-	.INIT_A	(64'h8000_0000_8000_0000),
-	.INIT_B	(64'h8000_0000_8000_0000),
-	.INIT_C	(64'h8000_0000_8000_0000),
-	.INIT_D	(64'h8000_0000_8000_0000)
+	.INIT_A	(INIT_A),
+	.INIT_B	(INIT_B),
+	.INIT_C	(INIT_C),
+	.INIT_D	(INIT_D)
 ) RAM32M_inst (
 	.DOA	({o6[0],o5[0]}),
 	.DOB	({o6[1],o5[1]}),
@@ -69,10 +75,10 @@ RAM32M #(
 genvar i;
 generate
 	for (i=0; i<4; i=i+1) begin: o5_o6_DFF
-		(* H_SET = "uset0", RLOC = "X0Y0" *) (* dont_touch = "true" *) (*BEL ="SLICE_X0Y0/BFF"*)
+		(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */ (*BEL ="SLICE_X0Y0/BFF"*)
 		FDRE #(
 			.INIT(1'b0)
-		) FDRE_inst1 (
+		) FDRE_inst_1 (
 			.Q	(match[i*2]),
 			.C	(clk),
 			.CE	(1'b1),
@@ -80,10 +86,10 @@ generate
 			.D	(o5[i])
 		);
 
-		(* H_SET = "uset0", RLOC = "X0Y0" *) (* dont_touch = "true" *) (*BEL ="SLICE_X0Y0/BFF"*)
+		(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */ (*BEL ="SLICE_X0Y0/BFF"*)
 		FDRE #(
 			.INIT(1'b0)
-		) FDRE_inst (
+		) FDRE_inst_2 (
 			.Q	(match[(i*2)+1]),
 			.C	(clk),
 			.CE	(1'b1),

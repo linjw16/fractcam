@@ -28,7 +28,7 @@ reg [159:0] sk; //search key
 reg [6:0] we_sel=7'd0;
 
 
-(* dont_touch = "true" *) top #(1024,160) top_inst (sk,clk,wr,reset,we_sel,match_reduced);
+/* (* dont_touch = "true" *) */ top #(1024,160) top_inst (sk,clk,wr,reset,we_sel,match_reduced);
 
 //====================================================//
 

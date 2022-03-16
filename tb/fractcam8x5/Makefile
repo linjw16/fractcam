@@ -21,11 +21,7 @@ TOPLEVEL = $(DUT)
 MODULE	= testbench
 
 # FracTCAM
-# VERILOG_SOURCES += ../../rtl/fractcam/fractcam.v
 VERILOG_SOURCES += ../../rtl/fractcam/fractcam8x5.v
-# VERILOG_SOURCES += ../../rtl/fractcam/and0.v
-# VERILOG_SOURCES += ../../rtl/fractcam/and6.v
-# VERILOG_SOURCES += ../../rtl/fractcam/andD6slice.v
 # FracTCAM sim
 VERILOG_SOURCES += ../../rtl/sim/FDRE.v
 VERILOG_SOURCES += ../../rtl/sim/LUT6.v

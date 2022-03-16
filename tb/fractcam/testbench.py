@@ -22,7 +22,6 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, FallingEdge
 from cocotb.regression import TestFactory
 from cocotb.result import TestFailure, TestSuccess
-from cocotb_bus.drivers import BitDriver
 
 
 class FracTCAM_TB(object):
@@ -34,12 +33,15 @@ class FracTCAM_TB(object):
 		self.dut = dut
 		self.TCAM_DEPTH = self.dut.TCAM_DEPTH.value
 		self.TCAM_WIDTH = self.dut.TCAM_WIDTH.value
+		self.TCAM_WR_WIDTH = self.dut.TCAM_WR_WIDTH.value
 		self.SLICEM_ROWS = self.dut.SLICEM_ROWS.value
 		self.SLICEM_ADDR_WIDTH = self.dut.SLICEM_ADDR_WIDTH.value
 		self.log.debug("TCAM_DEPTH = %s", repr(self.TCAM_DEPTH))
 		self.log.debug("TCAM_WIDTH = %s", repr(self.TCAM_WIDTH))
+		self.log.debug("TCAM_WR_WIDTH = %s", repr(self.TCAM_WR_WIDTH))
 		self.log.debug("SLICEM_ROWS = %s", repr(self.SLICEM_ROWS))
 		self.log.debug("SLICEM_ADDR_WIDTH = %s", repr(self.SLICEM_ADDR_WIDTH))
+		self.log.debug("INIT = %s", repr(self.dut.INIT))
 		self.wr_addr_ptr = 0
 		self.tcam_dict = {}
 		self.tcam_list = [set()]*self.TCAM_DEPTH
@@ -47,10 +49,13 @@ class FracTCAM_TB(object):
 		cocotb.start_soon(Clock(dut.clk, 4, 'ns').start())
 
 	async def reset(self):
+		await RisingEdge(self.dut.clk)
+		await RisingEdge(self.dut.clk)
 		self.dut.search_key.value = 0
-		self.dut.wr_enable_sel.value = 0
-		self.dut.wr_enable.value = 0
+		self.dut.wr_slicem_addr.value = 0
+		self.dut.wr_valid.value = 0
 		self.dut.wr_tcam_data.value = 0
+		self.dut.wr_tcam_keep.value = 0
 		self.log.info("Reset begin...")
 		self.dut.rst.setimmediatevalue(0)
 		await RisingEdge(self.dut.clk)
@@ -66,7 +71,7 @@ class FracTCAM_TB(object):
 	def model_wr(self, wr_data=0, wr_keep=0, idx=0):
 		while(wr_keep & (1 << idx)):
 			idx = idx+1
-		if(idx == self.TCAM_WIDTH):
+		if(idx == self.TCAM_WR_WIDTH):
 			set_1 = self.tcam_dict.get(wr_data, set())
 			set_1.add(self.wr_addr_ptr)
 			self.tcam_dict[wr_data] = set_1
@@ -81,31 +86,31 @@ class FracTCAM_TB(object):
 		wr_data_1 = 0
 		wr_keep_1 = 0
 		for i in range(8):
-			wr_data_1 += wr_data[i] << (i*self.TCAM_WIDTH)
-			wr_keep_1 += wr_keep[i] << (i*self.TCAM_WIDTH)
+			wr_data_1 += wr_data[i] << (i*self.TCAM_WR_WIDTH)
+			wr_keep_1 += wr_keep[i] << (i*self.TCAM_WR_WIDTH)
 
 			# self.tcam_dict[wr_data[i]] = (self.wr_addr_ptr // 0x1000)*8+i
 			set_2 = self.tcam_list[self.wr_addr_ptr]
 			for sk in set_2:
 				set_1 = self.tcam_dict[sk].discard(self.wr_addr_ptr)
 			self.tcam_list[self.wr_addr_ptr] = set()
-
 			self.model_wr(wr_data[i], wr_keep[i])
 			self.wr_addr_ptr = (self.wr_addr_ptr+1) % (int(self.TCAM_DEPTH/8) << 3)
 
 		# self.wr_addr_ptr = self.wr_addr_ptr + 0x1000
-		self.dut.wr_enable_sel.value = (
+		self.dut.wr_slicem_addr.value = (
 			self.wr_addr_ptr-1) // 0x1000 % int(self.TCAM_DEPTH/8)
-		self.dut.wr_enable.value = 1
+		self.dut.wr_valid.value = 1
 		self.dut.wr_tcam_data.value = wr_data_1
 		self.dut.wr_tcam_keep.value = wr_keep_1
+		await RisingEdge(self.dut.clk)
+		self.dut.wr_valid.value = 0
 		for _ in range(32*9):
 			await RisingEdge(self.dut.clk)
-		self.dut.wr_enable.value = 0
 	# async def write(self, wr_data=range(8)):
-	# 	self.dut.wr_enable_sel.value = self.wr_addr_ptr // 0x8
+	# 	self.dut.wr_slicem_addr.value = self.wr_addr_ptr // 0x8
 	# 	self.wr_addr_ptr = self.wr_addr_ptr + 1
-	# 	self.dut.wr_enable.value = 1
+	# 	self.dut.wr_valid.value = 1
 	# 	for i in range(8):
 	# 		self.tcam_dict[wr_data[i]] = i
 	# 		self.dut.search_key.value = wr_data[i]
@@ -113,7 +118,7 @@ class FracTCAM_TB(object):
 	# 			await RisingEdge(self.dut.clk)
 	# 	for _ in range(32):
 	# 		await RisingEdge(self.dut.clk)
-	# 	self.dut.wr_enable.value = 0
+	# 	self.dut.wr_valid.value = 0
 
 
 async def run_test(dut, search_key=None, data_in=None, config_coroutine=None):
@@ -122,8 +127,8 @@ async def run_test(dut, search_key=None, data_in=None, config_coroutine=None):
 	# if config_coroutine is not None:	# TODO: config match rules
 	# cocotb.fork(config_coroutine(tb.csr))
 
-	for wr_data in data_in(int(tb.TCAM_DEPTH/8), 8, 0x0, 1 << tb.TCAM_WIDTH):
-		wr_keep = [(1<<tb.TCAM_WIDTH)-1]*8
+	for wr_data in data_in(int(tb.TCAM_DEPTH/8), 8, 0x0, 1 << tb.TCAM_WR_WIDTH):
+		wr_keep = [(1<<tb.TCAM_WR_WIDTH)-1]*8
 		await tb.write(wr_data, wr_keep)
 		await RisingEdge(tb.dut.clk)
 		tb.log.debug(str(tb.tcam_dict))
@@ -131,13 +136,13 @@ async def run_test(dut, search_key=None, data_in=None, config_coroutine=None):
 
 	wr_data = [0b00001, 0b00010, 0b00100, 0b01000,
             0b10000, 0b00011, 0b00111, 0b01111]
-	wr_keep = [(1 << tb.TCAM_WIDTH)-1]*8
+	wr_keep = [(1 << tb.TCAM_WR_WIDTH)-1]*8
 	wr_keep[-1] = 0b00100
 	await tb.write(wr_data, wr_keep)
 	tb.log.debug(str(tb.tcam_dict))
 	
-	for din in range(1<<tb.TCAM_WIDTH):
-		key_1 = din % (1 << tb.TCAM_WIDTH)
+	for din in range(1<<tb.TCAM_WR_WIDTH):
+		key_1 = din % (1 << tb.TCAM_WR_WIDTH)
 		tb.dut.search_key.value = key_1
 		await RisingEdge(tb.dut.clk)
 		await FallingEdge(tb.dut.clk)

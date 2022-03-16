@@ -40,7 +40,7 @@ wire [IN_WIDTH_PAD3*DEPTH-1:0] in_3_pad = {{((IN_WIDTH_PAD3-OUT_WIDTH2)*DEPTH){1
 genvar i;
 generate
 	for (i = 0; i < OUT_WIDTH1; i = i+1) begin: lp_and6_l1
-		(* dont_touch = "true" *)
+		/* (* dont_touch = "true" *) */
 		and6 #(
 			.DEPTH(DEPTH),
 			.WIDTH(6)
@@ -50,7 +50,7 @@ generate
 		);
 	end
 	for (i = 0; i < OUT_WIDTH2; i = i+1) begin: lp_and6_l2
-		(* dont_touch = "true" *)
+		/* (* dont_touch = "true" *) */
 		and6 #(
 			.DEPTH(DEPTH),
 			.WIDTH(6)
@@ -60,7 +60,7 @@ generate
 		);
 	end
 	for (i = 0; i < OUT_WIDTH3; i = i+1) begin: lp_and6_l3
-		(* dont_touch = "true" *)
+		/* (* dont_touch = "true" *) */
 		and6 #(
 			.DEPTH(DEPTH),
 			.WIDTH(6)

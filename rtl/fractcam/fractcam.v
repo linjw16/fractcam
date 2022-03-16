@@ -13,20 +13,17 @@
  * FracTCAM with match table and output and gate. 
  */
 module fractcam #(
-	parameter DEBUG_WIDTH = 8,
 	parameter TCAM_WIDTH = 5,
-	parameter TCAM_DEPTH = 64
+	parameter TCAM_DEPTH = 64,
+	parameter INIT = 64'b0
 ) (
 	input  wire clk,
 	input  wire rst,
-	output wire [DEBUG_WIDTH-1:0] debug,
 	input  wire [TCAM_WIDTH-1:0] search_key,
 	input  wire [TCAM_DEPTH/8-1:0] wr_enable,
 	input  wire [TCAM_WIDTH*8/5-1:0] rules,
 	output wire [TCAM_DEPTH-1:0] match
 );
-
-assign debug = {clk,rst,rules,wr_enable,search_key};
 
 // TODO: Padding the last SLICEM's input in order to support arbitrary width and depth. 
 initial begin
@@ -49,13 +46,18 @@ genvar i, j;
 generate
 	for (i=0; i<SLICEM_COLS; i=i+1) begin: Width_extension
 		for (j=0; j<SLICEM_ROWS; j=j+1) begin: Depth_extension
-			fractcam8x5 fractcam8x5_inst(
-				.clk(clk),
-				.rst(rst),
-				.search_key(search_key[i*5+4:i*5]),
-				.wr_enable(wr_enable[j]),
-				.rules(rules[i*8+7:i*8]),
-				.match(match_l[i*TCAM_DEPTH+(j+1)*8-1 : i*TCAM_DEPTH+j*8])
+			fractcam8x5 #(
+				.INIT_A		(INIT),
+				.INIT_B		(INIT),
+				.INIT_C		(INIT),
+				.INIT_D		(INIT)
+			) fractcam8x5_inst (
+				.clk		(clk),
+				.rst		(rst),
+				.search_key	(search_key[i*5+4:i*5]),
+				.wr_enable	(wr_enable[j]),
+				.rules		(rules[i*8+7:i*8]),
+				.match		(match_l[i*TCAM_DEPTH+(j+1)*8-1 : i*TCAM_DEPTH+j*8])
 			);
 		end
 	end

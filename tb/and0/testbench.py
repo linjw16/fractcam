@@ -22,7 +22,6 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge
 from cocotb.regression import TestFactory
 from cocotb.result import TestFailure, TestSuccess
-from cocotb_bus.drivers import BitDriver
 
 
 class and0_TB(object):

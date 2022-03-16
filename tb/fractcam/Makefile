@@ -22,7 +22,7 @@ MODULE	= testbench
 
 # FracTCAM
 VERILOG_SOURCES += ./$(TOPLEVEL).v
-VERILOG_SOURCES += ../../rtl/fractcam/Demux.v
+VERILOG_SOURCES += ../../rtl/fractcam/async_demux.v
 VERILOG_SOURCES += ../../rtl/fractcam/update_logic.v
 VERILOG_SOURCES += ../../rtl/fractcam/fractcam.v
 VERILOG_SOURCES += ../../rtl/fractcam/fractcam8x5.v
@@ -37,13 +37,17 @@ VERILOG_SOURCES += ../../rtl/sim/SRLC32E.v
 
 # module parameters
 export PARAM_TCAM_DEPTH ?= 16
-export PARAM_TCAM_WIDTH ?= 5
+export PARAM_TCAM_WIDTH ?= 10
+export PARAM_TCAM_WR_WIDTH ?= 8
+export PARAM_INIT ?= 0
 
 ifeq ($(SIM), icarus)
 	PLUSARGS += -fst
 
 	COMPILE_ARGS += -P $(TOPLEVEL).TCAM_DEPTH=$(PARAM_TCAM_DEPTH)
 	COMPILE_ARGS += -P $(TOPLEVEL).TCAM_WIDTH=$(PARAM_TCAM_WIDTH)
+	COMPILE_ARGS += -P $(TOPLEVEL).TCAM_WR_WIDTH=$(PARAM_TCAM_WR_WIDTH)
+	COMPILE_ARGS += -P $(TOPLEVEL).INIT=$(PARAM_INIT)
 
 	ifeq ($(WAVES), 1)
 		VERILOG_SOURCES += iverilog_dump.v
@@ -55,6 +59,8 @@ else ifeq ($(SIM), verilator)
 
 	COMPILE_ARGS += -GTCAM_DEPTH=$(PARAM_TCAM_DEPTH)
 	COMPILE_ARGS += -GTCAM_WIDTH=$(PARAM_TCAM_WIDTH)
+	COMPILE_ARGS += -GTCAM_WR_WIDTH=$(PARAM_TCAM_WR_WIDTH)
+	COMPILE_ARGS += -GINIT=$(PARAM_INIT)
 
 	# COMPILE_ARGS += -I $(HEADER_FILES)
 

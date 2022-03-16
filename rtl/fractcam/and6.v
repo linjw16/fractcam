@@ -42,7 +42,7 @@ generate
 		end
 		2: begin
 			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
-				(* dont_touch = "true" *) 
+				/* (* dont_touch = "true" *) */ 
 				andD6slice #(
 					.INIT(64'h8888_8888_8888_8888)
 				) andD6slice_init(
@@ -58,7 +58,7 @@ generate
 		end
 		3: begin
 			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
-				(* dont_touch = "true" *) 
+				/* (* dont_touch = "true" *) */ 
 				andD6slice #(
 					.INIT(64'h8080_8080_8080_8080)
 				) andD6slice_init(
@@ -74,7 +74,7 @@ generate
 		end
 		4: begin
 			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
-				(* dont_touch = "true" *) 
+				/* (* dont_touch = "true" *) */ 
 				andD6slice #(
 					.INIT(64'h8000_8000_8000_8000)
 				) andD6slice_init(
@@ -90,7 +90,7 @@ generate
 		end
 		5: begin
 			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
-				(* dont_touch = "true" *) 
+				/* (* dont_touch = "true" *) */ 
 				andD6slice #(
 					.INIT(64'h8000_0000_8000_0000)
 				) andD6slice_init(
@@ -106,7 +106,7 @@ generate
 		end
 		default : begin // 6: 
 			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
-				(* dont_touch = "true" *) 
+				/* (* dont_touch = "true" *) */ 
 				andD6slice #(
 					.INIT(64'h8000_0000_0000_0000)
 				) andD6slice_init(
