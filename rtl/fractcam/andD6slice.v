@@ -15,7 +15,7 @@ module andD6slice #(
 	output wire [3:0] o
 );
 
-(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */
+/* (* H_SET = "uset0", RLOC = "X0Y0" *) */ /* (* dont_touch = "true" *) */
 LUT6 #(
 	.INIT(INIT)
 ) LUT6_inst (
@@ -28,7 +28,7 @@ LUT6 #(
 	.I5(f[0])
 );
 
-(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */
+/* (* H_SET = "uset0", RLOC = "X0Y0" *) */ /* (* dont_touch = "true" *) */
 LUT6 #(
 	.INIT(INIT)
 ) LUT6_inst1 (
@@ -41,7 +41,7 @@ LUT6 #(
 	.I5(f[1])
 );
 
-(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */
+/* (* H_SET = "uset0", RLOC = "X0Y0" *) */ /* (* dont_touch = "true" *) */
 LUT6 #(
 	.INIT(INIT)
 ) LUT6_inst2 (
@@ -54,7 +54,7 @@ LUT6 #(
 	.I5(f[2])
 );
 
-(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */
+/* (* H_SET = "uset0", RLOC = "X0Y0" *) */ /* (* dont_touch = "true" *) */
 LUT6 #(
 	.INIT(INIT)
 ) LUT6_inst3 (

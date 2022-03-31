@@ -49,7 +49,7 @@ wire [DEBUG_WIDTH-1:0] debug;
  * Virtex-7
  * Xilinx HDL Language Template, version 2016.3
  */
-(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */
+/* (* H_SET = "uset0", RLOC = "X0Y0" *) */ /* (* dont_touch = "true" *) */
 RAM32M #(
 	.INIT_A	(INIT_A),
 	.INIT_B	(INIT_B),
@@ -75,7 +75,7 @@ RAM32M #(
 genvar i;
 generate
 	for (i=0; i<4; i=i+1) begin: o5_o6_DFF
-		(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */ (*BEL ="SLICE_X0Y0/BFF"*)
+		/* (* H_SET = "uset0", RLOC = "X0Y0" *) */ /* (* dont_touch = "true" *) */ /* (*BEL ="SLICE_X0Y0/BFF"*) */
 		FDRE #(
 			.INIT(1'b0)
 		) FDRE_inst_1 (
@@ -86,7 +86,7 @@ generate
 			.D	(o5[i])
 		);
 
-		(* H_SET = "uset0", RLOC = "X0Y0" *) /* (* dont_touch = "true" *) */ (*BEL ="SLICE_X0Y0/BFF"*)
+		/* (* H_SET = "uset0", RLOC = "X0Y0" *) */ /* (* dont_touch = "true" *) */ /* (*BEL ="SLICE_X0Y0/BFF"*) */
 		FDRE #(
 			.INIT(1'b0)
 		) FDRE_inst_2 (

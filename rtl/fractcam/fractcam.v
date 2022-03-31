@@ -37,8 +37,8 @@ initial begin
 	end
 end
 
-localparam SLICEM_COLS = TCAM_WIDTH/5;	// SLICEMs' column number
-localparam SLICEM_ROWS = TCAM_DEPTH/8;	// SLICEMs' row number
+localparam SLICEM_COLS = TCAM_WIDTH/5;	// SLICEMs' column size
+localparam SLICEM_ROWS = TCAM_DEPTH/8;	// SLICEMs' row size
 
 wire [SLICEM_COLS*TCAM_DEPTH-1:0] match_l;
 

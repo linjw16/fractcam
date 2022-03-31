@@ -20,7 +20,6 @@ module update_logic #(
 
 // COUNTER
 localparam COUNT_WIDTH = 5;
-// localparam TCAM_PTR_WIDTH = 3;
 
 reg [8:0] count2_reg = {9{1'b0}}, count2_next;
 reg [COUNT_WIDTH-1:0] count_reg = {COUNT_WIDTH{1'b0}}, count_next;
@@ -30,7 +29,6 @@ reg [SLICEM_ADDR_WIDTH-1:0] wr_enable_sel_reg = {SLICEM_ADDR_WIDTH{1'b0}}, wr_en
 reg wr_ready_reg = 1'b1, wr_ready_next;
 reg [TCAM_WIDTH*8-1:0] wr_tcam_data_reg = {TCAM_WIDTH{1'b1}}, wr_tcam_data_next;
 reg [TCAM_WIDTH*8-1:0] wr_tcam_keep_reg = {TCAM_WIDTH{1'b1}}, wr_tcam_keep_next;
-// reg [TCAM_PTR_WIDTH-1:0] wr_tcam_ptr_reg = {TCAM_PTR_WIDTH{1'b0}}, wr_tcam_ptr_next;
 
 wire [4:0] count;
 wire flag;
@@ -44,7 +42,6 @@ always @(*) begin
 	wr_enable_sel_next = wr_enable_sel_reg;
 	wr_tcam_data_next = wr_tcam_data_reg;
 	wr_tcam_keep_next = wr_tcam_keep_reg;
-	// wr_tcam_ptr_next = wr_tcam_ptr_reg;
 	sel_next = sel_reg;
 	if(wr_valid && wr_ready) begin
 		wr_ready_next = 1'b0;
