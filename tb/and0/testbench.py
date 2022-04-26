@@ -36,6 +36,24 @@ class and0_TB(object):
 		self.DEPTH = self.dut.DEPTH.value
 		self.log.debug("WIDTH = %s", repr(self.WIDTH))
 		self.log.debug("DEPTH = %s", repr(self.DEPTH))
+		self.OUT_WIDTH1 = self.dut.and0_inst.OUT_WIDTH1.value
+		self.OUT_WIDTH2 = self.dut.and0_inst.OUT_WIDTH2.value
+		self.OUT_WIDTH3 = self.dut.and0_inst.OUT_WIDTH3.value
+		self.IN_WIDTH_PAD1 = self.dut.and0_inst.IN_WIDTH_PAD1.value
+		self.IN_WIDTH_PAD2 = self.dut.and0_inst.IN_WIDTH_PAD2.value
+		self.IN_WIDTH_PAD3 = self.dut.and0_inst.IN_WIDTH_PAD3.value
+		self.IN_WIDTH_RSD1 = self.dut.and0_inst.IN_WIDTH_RSD1.value
+		self.IN_WIDTH_RSD2 = self.dut.and0_inst.IN_WIDTH_RSD2.value
+		self.IN_WIDTH_RSD3 = self.dut.and0_inst.IN_WIDTH_RSD3.value
+		self.log.debug("OUT_WIDTH1 = %d", self.OUT_WIDTH1)
+		self.log.debug("OUT_WIDTH2 = %d", self.OUT_WIDTH2)
+		self.log.debug("OUT_WIDTH3 = %d", self.OUT_WIDTH3)
+		self.log.debug("IN_WIDTH_PAD1 = %d", self.IN_WIDTH_PAD1)
+		self.log.debug("IN_WIDTH_PAD2 = %d", self.IN_WIDTH_PAD2)
+		self.log.debug("IN_WIDTH_PAD3 = %d", self.IN_WIDTH_PAD3)
+		self.log.debug("IN_WIDTH_RSD1 = %d", self.IN_WIDTH_RSD1)
+		self.log.debug("IN_WIDTH_RSD2 = %d", self.IN_WIDTH_RSD2)
+		self.log.debug("IN_WIDTH_RSD3 = %d", self.IN_WIDTH_RSD3)
 
 		cocotb.start_soon(Clock(dut.clk, 4, 'ns').start())
 
@@ -53,12 +71,12 @@ class and0_TB(object):
 		self.dut.in_1.value = 0
 		self.log.info("Reset begin...")
 		self.dut.rst.setimmediatevalue(0)
-		# await RisingEdge(self.dut.clk)
-		# await RisingEdge(self.dut.clk)
-		# self.dut.rst <= 1
-		# await RisingEdge(self.dut.clk)
-		# await RisingEdge(self.dut.clk)
-		# self.dut.rst.value = 0
+		await RisingEdge(self.dut.clk)
+		await RisingEdge(self.dut.clk)
+		self.dut.rst <= 1
+		await RisingEdge(self.dut.clk)
+		await RisingEdge(self.dut.clk)
+		self.dut.rst.value = 0
 		await RisingEdge(self.dut.clk)
 		await RisingEdge(self.dut.clk)
 		self.log.info("reset end")
@@ -71,8 +89,13 @@ async def run_test(dut, data_in=None, config_coroutine=None):
 	# cocotb.fork(config_coroutine(tb.csr))
 
 	len_1 = int(tb.DEPTH * tb.WIDTH / 8)
-	tb.dut.in_1.value = int.from_bytes(incrementing_payload(len_1,0xFF,0xFF), byteorder='big')
+	payload = incrementing_payload(len_1, 0xFF, 0xFF)
+	din = int.from_bytes(payload, byteorder='big')
+	tb.dut.in_1.value = din
 	await RisingEdge(tb.dut.clk)
+	out_1 = tb.dut.out_1.value
+	assert out_1 == tb.model(payload)
+	tb.log.debug("AND = %s", repr(out_1))
 
 	for din in [data_in(len_1) for x in range(0, 0xFF, 0xF)]:
 		tb.dut.in_1.value = int.from_bytes(din, byteorder='big')

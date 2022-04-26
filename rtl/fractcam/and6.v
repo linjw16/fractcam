@@ -20,7 +20,7 @@ module and6 #(
 	output wire [DEPTH-1 : 0] out
 );
 
-localparam n_andD6slice = DEPTH/4; // number of andD6 slices
+localparam n_and6x4 = DEPTH/4; // number of andD6 slices
 localparam D = DEPTH;
 
 initial begin
@@ -28,7 +28,7 @@ initial begin
 		$error("Error :  Depth is not multiple of 4. (instance %m)");
 		$finish;
 	end
-	if(WIDTH<2 || WIDTH>6) begin
+	if(WIDTH>6) begin
 		$error("Error :  Width should in {1,2,3,4,5,6}. (instance %m)");
 		$finish;
 	end
@@ -41,11 +41,11 @@ generate
 			assign out[DEPTH-1:0] = in[DEPTH-1:0];
 		end
 		2: begin
-			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
+			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
-				andD6slice #(
+				and6x4 #(
 					.INIT(64'h8888_8888_8888_8888)
-				) andD6slice_init(
+				) and6x4_inst(
 					in[0*D+i*4+3 : 0*D+i*4],
 					in[1*D+i*4+3 : 1*D+i*4],
 					4'hF,
@@ -57,11 +57,11 @@ generate
 			end
 		end
 		3: begin
-			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
+			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
-				andD6slice #(
+				and6x4 #(
 					.INIT(64'h8080_8080_8080_8080)
-				) andD6slice_init(
+				) and6x4_inst(
 					in[0*D+i*4+3 : 0*D+i*4],
 					in[1*D+i*4+3 : 1*D+i*4],
 					in[2*D+i*4+3 : 2*D+i*4],
@@ -73,11 +73,11 @@ generate
 			end
 		end
 		4: begin
-			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
+			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
-				andD6slice #(
+				and6x4 #(
 					.INIT(64'h8000_8000_8000_8000)
-				) andD6slice_init(
+				) and6x4_inst(
 					in[0*D+i*4+3 : 0*D+i*4],
 					in[1*D+i*4+3 : 1*D+i*4],
 					in[2*D+i*4+3 : 2*D+i*4],
@@ -89,11 +89,11 @@ generate
 			end
 		end
 		5: begin
-			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
+			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
-				andD6slice #(
+				and6x4 #(
 					.INIT(64'h8000_0000_8000_0000)
-				) andD6slice_init(
+				) and6x4_inst(
 					in[0*D+i*4+3 : 0*D+i*4],
 					in[1*D+i*4+3 : 1*D+i*4],
 					in[2*D+i*4+3 : 2*D+i*4],
@@ -105,11 +105,11 @@ generate
 			end
 		end
 		default : begin // 6: 
-			for (i=0; i<n_andD6slice; i=i+1) begin :  andD6slice
+			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
-				andD6slice #(
+				and6x4 #(
 					.INIT(64'h8000_0000_0000_0000)
-				) andD6slice_init(
+				) and6x4_inst(
 					in[0*D+i*4+3 : 0*D+i*4],
 					in[1*D+i*4+3 : 1*D+i*4],
 					in[2*D+i*4+3 : 2*D+i*4],

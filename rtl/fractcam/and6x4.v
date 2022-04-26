@@ -3,7 +3,7 @@
 /*
  * AND gate with input width at most 6, implemented in a SLICEM with four 6-LUT. 
  */
-module andD6slice #(
+module and6x4 #(
 	parameter INIT = 64'h8000_0000_0000_0000
 )(
 	input  wire [3:0] a,

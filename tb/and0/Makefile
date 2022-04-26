@@ -23,7 +23,7 @@ MODULE	= testbench
 VERILOG_SOURCES += dut.v
 VERILOG_SOURCES += ../../rtl/fractcam/and0.v
 VERILOG_SOURCES += ../../rtl/fractcam/and6.v
-VERILOG_SOURCES += ../../rtl/fractcam/andD6slice.v
+VERILOG_SOURCES += ../../rtl/fractcam/and6x4.v
 # FracTCAM sim
 VERILOG_SOURCES += ../../rtl/sim/FDRE.v
 VERILOG_SOURCES += ../../rtl/sim/LUT6.v
@@ -32,7 +32,7 @@ VERILOG_SOURCES += ../../rtl/sim/SRLC32E.v
 
 # module parameters
 export PARAM_DEPTH ?= 8
-export PARAM_WIDTH ?= 12
+export PARAM_WIDTH ?= 8
 
 ifeq ($(SIM), icarus)
 	PLUSARGS += -fst

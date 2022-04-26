@@ -152,13 +152,14 @@ async def run_test(dut, search_key=None, data_in=None, config_coroutine=None):
 		for i in expected_addr:
 			expected_match = expected_match + (1 << i) % (1 << tb.TCAM_DEPTH)
 		if(match):
-			tb.log.debug("search_key = %s\t match = %s\t expected_match = %s", bin(key_1)[2:], repr(match), bin(expected_match)[2:])
+			tb.log.debug("search_key = %s\t match = %s\t expected_match = %s",
+		             bin(key_1)[2:], repr(match), format(expected_match, '016b'))
+
 		try:
 			assert (match & expected_match) if (
 			match and expected_match) else not (match or expected_match)
 		except AssertionError:
-			tb.log.debug("Error\nsearch_key = %s\t match = %s\t expected_match = %s",
-			             bin(key_1)[2:], repr(match), bin(expected_match)[2:])
+			input("\n\n\t Push any key...")
 			return
 	await RisingEdge(tb.dut.clk)
 
