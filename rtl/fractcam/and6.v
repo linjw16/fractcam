@@ -13,14 +13,14 @@
  * And gate with input width at most 6
  */
 module and6 #(
-	parameter DEPTH = 64,
+	parameter DEPTH = 8,
 	parameter WIDTH = 6
 )(
-	input  wire [6*DEPTH-1 : 0] in,
+	input  wire [WIDTH*DEPTH-1 : 0] in,
 	output wire [DEPTH-1 : 0] out
 );
 
-localparam n_and6x4 = DEPTH/4; // number of andD6 slices
+localparam NUM_CLB = DEPTH/4; // number of andD6 slices
 localparam D = DEPTH;
 
 initial begin
@@ -41,7 +41,7 @@ generate
 			assign out[DEPTH-1:0] = in[DEPTH-1:0];
 		end
 		2: begin
-			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
+			for (i=0; i<NUM_CLB; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
 				and6x4 #(
 					.INIT(64'h8888_8888_8888_8888)
@@ -57,7 +57,7 @@ generate
 			end
 		end
 		3: begin
-			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
+			for (i=0; i<NUM_CLB; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
 				and6x4 #(
 					.INIT(64'h8080_8080_8080_8080)
@@ -73,7 +73,7 @@ generate
 			end
 		end
 		4: begin
-			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
+			for (i=0; i<NUM_CLB; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
 				and6x4 #(
 					.INIT(64'h8000_8000_8000_8000)
@@ -89,7 +89,7 @@ generate
 			end
 		end
 		5: begin
-			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
+			for (i=0; i<NUM_CLB; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
 				and6x4 #(
 					.INIT(64'h8000_0000_8000_0000)
@@ -105,7 +105,7 @@ generate
 			end
 		end
 		default : begin // 6: 
-			for (i=0; i<n_and6x4; i=i+1) begin :  and6x4
+			for (i=0; i<NUM_CLB; i=i+1) begin :  and6x4
 				/* (* dont_touch = "true" *) */ 
 				and6x4 #(
 					.INIT(64'h8000_0000_0000_0000)
