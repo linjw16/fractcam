@@ -1,0 +1,135 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Tue May  3 09:28:27 2022
+[*]
+[dumpfile] "/home/linjw16/E/Program_Files/prj/fractcam/tb/fractcam_top/fractcam_top.fst"
+[dumpfile_mtime] "Tue May  3 09:23:40 2022"
+[dumpfile_size] 28886
+[savefile] "/home/linjw16/E/Program_Files/prj/fractcam/tb/fractcam_top/temp.gtkw"
+[timestart] 2310470
+[size] 3664 2018
+[pos] -1 -1
+*-12.000000 2333660 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] fractcam_top.
+[treeopen] fractcam_top.genblk1[0].
+[treeopen] fractcam_top.genblk1[0].genblk2[0].
+[treeopen] fractcam_top.genblk1[1].
+[treeopen] fractcam_top.genblk1[1].genblk2[0].
+[treeopen] fractcam_top.Width_extension[0].
+[treeopen] fractcam_top.Width_extension[0].Depth_extension[0].
+[treeopen] fractcam_top.Width_extension[0].Depth_extension[0].fractcam8x5_inst.
+[treeopen] fractcam_top.Width_extension[0].Depth_extension[1].
+[treeopen] fractcam_top.Width_extension[1].
+[sst_width] 583
+[signals_width] 653
+[sst_expanded] 1
+[sst_vpaned_height] 599
+@22
+fractcam_top.wr_addr[9:0]
+@28
+fractcam_top.wr_data[79:0]
+@22
+fractcam_top.wr_keep[79:0]
+@28
+fractcam_top.wr_ready
+fractcam_top.wr_valid
+fractcam_top.wr_flag_reg
+fractcam_top.wr_en_reg
+fractcam_top.wr_enable_oh[1:0]
+fractcam_top.clk
+@22
+fractcam_top.genblk1[0].genblk2[0].data[4:0]
+fractcam_top.genblk1[0].genblk2[0].keep[4:0]
+fractcam_top.genblk1[0].genblk2[0].xor_5[4:0]
+@28
+fractcam_top.genblk1[0].genblk2[0].rule_32
+fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.D
+fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.CE
+fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q31
+@c00022
+fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+@28
+(0)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(1)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(2)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(3)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(4)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(5)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(6)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(7)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(8)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(9)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(10)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(11)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(12)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(13)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(14)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(15)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(16)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(17)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(18)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(19)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(20)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(21)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(22)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(23)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(24)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(25)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(26)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(27)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(28)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(29)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(30)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+(31)fractcam_top.genblk1[0].genblk2[0].SRLC32E_inst.Q_reg[31:0]
+@1401200
+-group_end
+@28
+fractcam_top.clk
+@22
+fractcam_top.rd_cmd_addr[9:0]
+@28
+fractcam_top.rd_cmd_ready
+fractcam_top.rd_cmd_valid
+fractcam_top.rd_flag_reg
+@22
+fractcam_top.cnt_rd_reg[5:0]
+fractcam_top.cnt_sk_reg[5:0]
+@28
+fractcam_top.search_key_int[9:0]
+@22
+fractcam_top.match_mtx[31:0]
+@c00023
+fractcam_top.rd_enable[15:0]
+@28
+(0)fractcam_top.rd_enable[15:0]
+(1)fractcam_top.rd_enable[15:0]
+(2)fractcam_top.rd_enable[15:0]
+(3)fractcam_top.rd_enable[15:0]
+(4)fractcam_top.rd_enable[15:0]
+(5)fractcam_top.rd_enable[15:0]
+(6)fractcam_top.rd_enable[15:0]
+(7)fractcam_top.rd_enable[15:0]
+(8)fractcam_top.rd_enable[15:0]
+(9)fractcam_top.rd_enable[15:0]
+(10)fractcam_top.rd_enable[15:0]
+(11)fractcam_top.rd_enable[15:0]
+(12)fractcam_top.rd_enable[15:0]
+(13)fractcam_top.rd_enable[15:0]
+(14)fractcam_top.rd_enable[15:0]
+(15)fractcam_top.rd_enable[15:0]
+@1401203
+-group_end
+@28
+fractcam_top.rd_mask_reg[1:0]
+fractcam_top.rd_rsp_data[9:0]
+fractcam_top.rd_rsp_keep[9:0]
+fractcam_top.rd_rsp_ready
+fractcam_top.rd_rsp_valid
+fractcam_top.clk
+fractcam_top.Width_extension[0].Depth_extension[0].fractcam8x5_inst.wr_enable
+fractcam_top.clk
+@22
+fractcam_top.Width_extension[0].Depth_extension[0].fractcam8x5_inst.search_key[4:0]
+fractcam_top.match_line[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

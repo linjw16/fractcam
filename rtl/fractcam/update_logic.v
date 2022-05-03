@@ -54,7 +54,7 @@ always @(*) begin
 		count_next = 0;
 	end else if (count_reg == 31) begin
 		count_next = 0;
-		sel_next = sel_next + 1'b1;
+		sel_next = sel_reg + 1'b1;
 	end else begin
 		count_next = count_reg + 1;
 	end

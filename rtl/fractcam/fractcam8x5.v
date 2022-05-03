@@ -1,3 +1,12 @@
+/*
+ * Created on Sun May 01 2022
+ *
+ * Copyright (c) 2022 IOA UCAS
+ *
+ * @Filename:	 fractcam8x5.v
+ * @Author:		 Jiawei Lin
+ * @Last edit:	 01:19:01
+ */
 `timescale 1ns / 1ps
 
 /*
