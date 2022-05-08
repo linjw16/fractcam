@@ -1,11 +1,11 @@
 # 
-# Created on Tue Jan 18 2022
+# Created on Tue May 03 2022
 # 
 # Copyright (c) 2022 IOA UCAS
 # 
 # @Filename:	 Makefile
 # @Author:		 Jiawei Lin
-# @Last edit:	 10:13:11
+# @Last edit:	 01:24:25
 # 
 
 TOPLEVEL_LANG = verilog
@@ -16,16 +16,12 @@ WAVES ?= 1
 COCOTB_HDL_TIMEUNIT = 1ns
 COCOTB_HDL_TIMEPRECISION = 1ps
 
-DUT	= fractcam_top
+DUT	= fractcam
 TOPLEVEL = $(DUT)
 MODULE	= testbench
 
 # FracTCAM
-VERILOG_SOURCES += ./$(TOPLEVEL).v
-VERILOG_SOURCES += ../../rtl/fractcam/async_demux.v
-VERILOG_SOURCES += ../../rtl/fractcam/update_logic.v
-VERILOG_SOURCES += ../../rtl/fractcam/fractcam.v
-VERILOG_SOURCES += ../../rtl/fractcam/fractcam8x5.v
+VERILOG_SOURCES += ../../rtl/fractcam/$(TOPLEVEL).v
 VERILOG_SOURCES += ../../rtl/fractcam/and0.v
 VERILOG_SOURCES += ../../rtl/fractcam/and6.v
 VERILOG_SOURCES += ../../rtl/fractcam/and6x4.v
@@ -37,16 +33,14 @@ VERILOG_SOURCES += ../../rtl/sim/SRLC32E.v
 
 # module parameters
 export PARAM_TCAM_DEPTH ?= 16
-export PARAM_TCAM_WIDTH ?= 10
-export PARAM_TCAM_WR_WIDTH ?= 8
+export PARAM_DATA_WIDTH ?= 8
 export PARAM_INIT ?= 0
 
 ifeq ($(SIM), icarus)
 	PLUSARGS += -fst
 
 	COMPILE_ARGS += -P $(TOPLEVEL).TCAM_DEPTH=$(PARAM_TCAM_DEPTH)
-	COMPILE_ARGS += -P $(TOPLEVEL).TCAM_WIDTH=$(PARAM_TCAM_WIDTH)
-	COMPILE_ARGS += -P $(TOPLEVEL).TCAM_WR_WIDTH=$(PARAM_TCAM_WR_WIDTH)
+	COMPILE_ARGS += -P $(TOPLEVEL).DATA_WIDTH=$(PARAM_DATA_WIDTH)
 	COMPILE_ARGS += -P $(TOPLEVEL).INIT=$(PARAM_INIT)
 
 	ifeq ($(WAVES), 1)
@@ -58,8 +52,7 @@ else ifeq ($(SIM), verilator)
 	COMPILE_ARGS += -Wno-SELRANGE -Wno-WIDTH
 
 	COMPILE_ARGS += -GTCAM_DEPTH=$(PARAM_TCAM_DEPTH)
-	COMPILE_ARGS += -GTCAM_WIDTH=$(PARAM_TCAM_WIDTH)
-	COMPILE_ARGS += -GTCAM_WR_WIDTH=$(PARAM_TCAM_WR_WIDTH)
+	COMPILE_ARGS += -GTCAM_WIDTH=$(PARAM_DATA_WIDTH)
 	COMPILE_ARGS += -GINIT=$(PARAM_INIT)
 
 	# COMPILE_ARGS += -I $(HEADER_FILES)

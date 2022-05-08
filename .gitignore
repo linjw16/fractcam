@@ -2,3 +2,4 @@ __pycache__
 *.xml
 *.fst
 .fuse*
+.backup/

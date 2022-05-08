@@ -26,9 +26,11 @@ module SRLC32E # (
 reg [31:0] Q_reg = INIT, Q_next;
 assign Q = Q_reg[A];
 assign Q31 = Q_reg[31];
+reg CLK_B;
 
 always @(*) begin
 	Q_next = {Q_reg[30:0], D};
+	CLK_B = !CLK;
 end
 
 always @(posedge(CLK)) begin

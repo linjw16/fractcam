@@ -1,11 +1,11 @@
 #
-# Created on Tue Jan 18 2022
+# Created on Tue May 03 2022
 #
 # Copyright (c) 2022 IOA UCAS
 #
 # @Filename:	 testbench.py
 # @Author:		 Jiawei Lin
-# @Last edit:	 11:16:42
+# @Last edit:	 01:28:09
 #
 
 import itertools
@@ -33,16 +33,15 @@ class FracTCAM_TB(object):
 		self.dut = dut
 		self.TCAM_DEPTH = self.dut.TCAM_DEPTH.value
 		self.TCAM_WIDTH = self.dut.TCAM_WIDTH.value
-		self.TCAM_WR_WIDTH = self.dut.TCAM_WR_WIDTH.value
+		self.DATA_WIDTH = self.dut.DATA_WIDTH.value
 		self.SLICEM_ROWS = self.dut.SLICEM_ROWS.value
-		self.SLICEM_ADDR_WIDTH = self.dut.SLICEM_ADDR_WIDTH.value
+		self.ADDR_WIDTH = self.dut.ADDR_WIDTH.value
 		self.log.debug("TCAM_DEPTH = %s", repr(self.TCAM_DEPTH))
 		self.log.debug("TCAM_WIDTH = %s", repr(self.TCAM_WIDTH))
-		self.log.debug("TCAM_WR_WIDTH = %s", repr(self.TCAM_WR_WIDTH))
+		self.log.debug("DATA_WIDTH = %s", repr(self.DATA_WIDTH))
 		self.log.debug("SLICEM_ROWS = %s", repr(self.SLICEM_ROWS))
-		self.log.debug("SLICEM_ADDR_WIDTH = %s", repr(self.SLICEM_ADDR_WIDTH))
+		self.log.debug("ADDR_WIDTH = %s", repr(self.ADDR_WIDTH))
 		self.log.debug("INIT = %s", repr(self.dut.INIT))
-		self.wr_addr_ptr = 0
 		self.tcam_dict = {}
 		self.tcam_list = [set()]*self.TCAM_DEPTH
 
@@ -52,10 +51,16 @@ class FracTCAM_TB(object):
 		await RisingEdge(self.dut.clk)
 		await RisingEdge(self.dut.clk)
 		self.dut.search_key.value = 0
-		self.dut.wr_slicem_addr.value = 0
+		self.dut.wr_addr.value = 0
+		self.dut.wr_data.value = 0
+		self.dut.wr_keep.value = 0
 		self.dut.wr_valid.value = 0
-		self.dut.wr_tcam_data.value = 0
-		self.dut.wr_tcam_keep.value = 0
+		self.dut.rd_cmd_addr = 0
+		self.dut.rd_cmd_valid = 0
+		self.dut.rd_rsp_ready = 0
+		self.dut.search_valid = 0
+		self.dut.match_ready = 1
+
 		self.log.info("Reset begin...")
 		self.dut.rst.setimmediatevalue(0)
 		await RisingEdge(self.dut.clk)
@@ -68,57 +73,60 @@ class FracTCAM_TB(object):
 		await RisingEdge(self.dut.clk)
 		self.log.info("reset end")
 
-	def model_wr(self, wr_data=0, wr_keep=0, idx=0):
+	def model_wr(self, wr_addr=0, wr_data=0, wr_keep=0, idx=0):
 		while(wr_keep & (1 << idx)):
 			idx = idx+1
-		if(idx == self.TCAM_WR_WIDTH):
+		if(idx == self.DATA_WIDTH):
 			set_1 = self.tcam_dict.get(wr_data, set())
-			set_1.add(self.wr_addr_ptr)
+			set_1.add(wr_addr)
 			self.tcam_dict[wr_data] = set_1
-			set_2 = self.tcam_list[self.wr_addr_ptr]
+			# print("tcam_dict[%03X] = %s" % (wr_data, repr(set_1)))
+			set_2 = self.tcam_list[wr_addr]
 			set_2.add(wr_data)
-			self.tcam_list[self.wr_addr_ptr] = set_2
+			self.tcam_list[wr_addr] = set_2
+			# print("tcam_list[%03X] = %s" % (wr_addr, repr(set_2)))
 		else:
-			self.model_wr(wr_data, wr_keep, idx+1)
-			self.model_wr(wr_data ^ (1 << idx), wr_keep, idx+1)
+			self.model_wr(wr_addr, wr_data, wr_keep, idx+1)
+			self.model_wr(wr_addr, wr_data ^ (1 << idx), wr_keep, idx+1)
 
-	async def write(self, wr_data=range(8), wr_keep=range(8)):
+	async def write(self, wr_addr=0, wr_data=range(8), wr_keep=range(8)):
 		wr_data_1 = 0
 		wr_keep_1 = 0
 		for i in range(8):
-			wr_data_1 += wr_data[i] << (i*self.TCAM_WR_WIDTH)
-			wr_keep_1 += wr_keep[i] << (i*self.TCAM_WR_WIDTH)
-
-			# self.tcam_dict[wr_data[i]] = (self.wr_addr_ptr // 0x1000)*8+i
-			set_2 = self.tcam_list[self.wr_addr_ptr]
+			wr_addr_i = (((wr_addr % self.TCAM_DEPTH)>>3)<<3) + i
+			wr_data_1 += wr_data[i] << (i*self.DATA_WIDTH)
+			wr_keep_1 += wr_keep[i] << (i*self.DATA_WIDTH)
+			set_2 = self.tcam_list[wr_addr_i]
 			for sk in set_2:
-				set_1 = self.tcam_dict[sk].discard(self.wr_addr_ptr)
-			self.tcam_list[self.wr_addr_ptr] = set()
-			self.model_wr(wr_data[i], wr_keep[i])
-			self.wr_addr_ptr = (self.wr_addr_ptr+1) % (int(self.TCAM_DEPTH/8) << 3)
+				set_1 = self.tcam_dict[sk].discard(wr_addr_i)
+			self.tcam_list[wr_addr_i] = set()
+			self.model_wr(wr_addr_i, wr_data[i], wr_keep[i])
 
-		# self.wr_addr_ptr = self.wr_addr_ptr + 0x1000
-		self.dut.wr_slicem_addr.value = (
-			self.wr_addr_ptr-1) // 0x1000 % int(self.TCAM_DEPTH/8)
+		self.dut.wr_addr.value = wr_addr
 		self.dut.wr_valid.value = 1
-		self.dut.wr_tcam_data.value = wr_data_1
-		self.dut.wr_tcam_keep.value = wr_keep_1
+		self.dut.wr_data.value = wr_data_1
+		self.dut.wr_keep.value = wr_keep_1
 		await RisingEdge(self.dut.clk)
 		self.dut.wr_valid.value = 0
-		for _ in range(32*9):
+		await RisingEdge(self.dut.rd_cmd_ready)
+		for _ in range(2):
 			await RisingEdge(self.dut.clk)
-	# async def write(self, wr_data=range(8)):
-	# 	self.dut.wr_slicem_addr.value = self.wr_addr_ptr // 0x8
-	# 	self.wr_addr_ptr = self.wr_addr_ptr + 1
-	# 	self.dut.wr_valid.value = 1
-	# 	for i in range(8):
-	# 		self.tcam_dict[wr_data[i]] = i
-	# 		self.dut.search_key.value = wr_data[i]
-	# 		for _ in range(32):
-	# 			await RisingEdge(self.dut.clk)
-	# 	for _ in range(32):
-	# 		await RisingEdge(self.dut.clk)
-	# 	self.dut.wr_valid.value = 0
+
+	async def read(self, rd_addr=0):
+		self.dut.rd_cmd_addr.value = rd_addr
+		self.dut.rd_cmd_valid.value = 1
+		while not self.dut.rd_cmd_ready.value:
+			await RisingEdge(self.dut.clk)
+		await RisingEdge(self.dut.clk)
+		self.dut.rd_cmd_valid.value = 0
+
+		self.dut.rd_rsp_ready.value = 1
+		await RisingEdge(self.dut.rd_rsp_valid)
+		await RisingEdge(self.dut.clk)
+		rd_data = self.dut.rd_rsp_data.value
+		rd_keep = self.dut.rd_rsp_keep.value
+		self.dut.rd_rsp_ready.value = 0
+		return [rd_data, rd_keep]
 
 
 async def run_test(dut, search_key=None, data_in=None, config_coroutine=None):
@@ -127,26 +135,41 @@ async def run_test(dut, search_key=None, data_in=None, config_coroutine=None):
 	# if config_coroutine is not None:	# TODO: config match rules
 	# cocotb.fork(config_coroutine(tb.csr))
 
-	for wr_data in data_in(int(tb.TCAM_DEPTH/8), 8, 0x0, 1 << tb.TCAM_WR_WIDTH):
-		wr_keep = [(1<<tb.TCAM_WR_WIDTH)-1]*8
-		await tb.write(wr_data, wr_keep)
+	for idx,wr_data in enumerate(data_in(tb.TCAM_DEPTH//8, 8, 0x0, 1 << tb.DATA_WIDTH)):
+		wr_keep = [(1<<tb.DATA_WIDTH)-1]*8
+		await tb.write(idx<<3, wr_data, wr_keep)
 		await RisingEdge(tb.dut.clk)
-		tb.log.debug(str(tb.tcam_dict))
-		tb.log.debug(str(tb.tcam_list))
+		tb.log.debug("tcam_dict:"+str(tb.tcam_dict))
+		tb.log.debug("tcam_list:"+str(tb.tcam_list))
 
-	wr_data = [0b00001, 0b00010, 0b00100, 0b01000,
-            0b10000, 0b00011, 0b00111, 0b01111]
-	wr_keep = [(1 << tb.TCAM_WR_WIDTH)-1]*8
-	wr_keep[-1] = 0b00100
-	await tb.write(wr_data, wr_keep)
-	tb.log.debug(str(tb.tcam_dict))
-	
-	for din in range(1<<tb.TCAM_WR_WIDTH):
-		key_1 = din % (1 << tb.TCAM_WR_WIDTH)
+	wr_data = [0b00001, 0b00011, 0b00111, 0b01111,
+            0b11111, 0b11110, 0b11100, 0b11000]
+	wr_keep = [(1 << tb.DATA_WIDTH)-1]*8
+	wr_keep[-1] = ((1 << tb.DATA_WIDTH)-1)-0b11000
+	await tb.write(0, wr_data, wr_keep)
+	tb.log.debug("tcam_dict:"+str(tb.tcam_dict))
+	tb.log.debug("tcam_list:"+str(tb.tcam_list))
+
+	for i in range(tb.TCAM_DEPTH):
+		[rd_data, rd_keep] = await tb.read(i)
+		try:
+			assert (int(rd_data) in tb.tcam_list[i])
+		except AssertionError:
+			tb.log.debug("tcam[%02X] = (%s, %s)" %
+		             (i, format(int(rd_data), '010b'), format(int(rd_keep), '010b')))
+			input("\n\n\t Push any key...")
+
+	for din in range(1<<tb.DATA_WIDTH):
+		key_1 = din % (1 << tb.DATA_WIDTH)
 		tb.dut.search_key.value = key_1
+		tb.dut.search_valid.value = 1
+		while not (tb.dut.search_ready.value):
+			await RisingEdge(tb.dut.clk)
+		await RisingEdge(tb.dut.clk)
+		tb.dut.search_valid.value = 0
 		await RisingEdge(tb.dut.clk)
 		await FallingEdge(tb.dut.clk)
-		match = tb.dut.match.value
+		match = tb.dut.match_line.value
 		expected_addr = tb.tcam_dict.get(key_1, {tb.TCAM_DEPTH+1})
 		expected_match = 0
 		for i in expected_addr:
@@ -159,8 +182,9 @@ async def run_test(dut, search_key=None, data_in=None, config_coroutine=None):
 			assert (match & expected_match) if (
 			match and expected_match) else not (match or expected_match)
 		except AssertionError:
+			tb.log.debug("search_key = %s\t match = %s\t expected_match = %s",
+		             bin(key_1)[2:], repr(match), format(expected_match, '016b'))
 			input("\n\n\t Push any key...")
-			return
 	await RisingEdge(tb.dut.clk)
 
 

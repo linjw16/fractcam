@@ -22,7 +22,6 @@ MODULE	= testbench
 
 # FracTCAM
 VERILOG_SOURCES += ../../rtl/fractcam/$(TOPLEVEL).v
-VERILOG_SOURCES += ../../rtl/fractcam/async_demux.v
 VERILOG_SOURCES += ../../rtl/fractcam/fractcam8x5.v
 VERILOG_SOURCES += ../../rtl/fractcam/and0.v
 VERILOG_SOURCES += ../../rtl/fractcam/and6.v

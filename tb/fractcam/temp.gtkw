@@ -1,0 +1,63 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Sun May  8 15:21:14 2022
+[*]
+[dumpfile] "/home/linjw16/E/Program_Files/prj/fractcam/tb/fractcam/fractcam.fst"
+[dumpfile_mtime] "Sun May  8 15:13:24 2022"
+[dumpfile_size] 19117
+[savefile] "/home/linjw16/E/Program_Files/prj/fractcam/tb/fractcam/temp.gtkw"
+[timestart] 0
+[size] 3664 2018
+[pos] -1 -1
+*-17.000000 327000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] fractcam.
+[sst_width] 587
+[signals_width] 595
+[sst_expanded] 1
+[sst_vpaned_height] 599
+@22
+fractcam.wr_addr[9:0]
+fractcam.wr_data[63:0]
+fractcam.wr_keep[63:0]
+@28
+fractcam.wr_en_pad[1:0]
+fractcam.wr_en_reg
+fractcam.wr_enable_oh[1:0]
+fractcam.wr_flag_reg
+fractcam.wr_ready
+fractcam.wr_valid
+fractcam.clk
+fractcam.clk
+@22
+fractcam.rd_cmd_addr[9:0]
+@28
+fractcam.rd_cmd_valid
+fractcam.rd_cmd_ready
+fractcam.clk
+fractcam.clk
+@22
+fractcam.rd_rsp_data[7:0]
+fractcam.rd_rsp_keep[7:0]
+@28
+fractcam.rd_rsp_valid
+fractcam.rd_rsp_ready
+fractcam.clk
+fractcam.clk
+@22
+fractcam.search_key[9:0]
+fractcam.search_key_int[9:0]
+@28
+fractcam.search_ready
+fractcam.search_valid
+fractcam.clk
+fractcam.clk
+@23
+fractcam.match_line[15:0]
+@22
+fractcam.match_line_int[15:0]
+fractcam.match_mtx[31:0]
+@28
+fractcam.match_ready
+fractcam.match_valid
+[pattern_trace] 1
+[pattern_trace] 0
