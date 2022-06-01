@@ -3,3 +3,4 @@ __pycache__
 *.fst
 .fuse*
 .backup/
+.vscode/
