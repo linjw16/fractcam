@@ -96,7 +96,7 @@ assign rd_cmd_ready = !clk_en && !rd_flag_reg;
 assign rd_rsp_valid = rd_rsp_valid_reg;
 assign rd_rsp_data = rd_data_reg[DATA_WIDTH-1:0];
 assign rd_rsp_keep = rd_keep_reg[DATA_WIDTH-1:0];
-
+// TODO: Can it be decoupled by a skid buffer. 
 assign search_ready = search_ready_reg && !rd_flag_reg && (!match_valid_reg || match_ready);
 assign match_valid = match_valid_reg;
 assign match_line = match_line_reg;

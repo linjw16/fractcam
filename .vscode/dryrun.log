@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/linjw16/E/Program_Files/prj/fractcam'
+make: Leaving directory '/home/linjw16/E/Program_Files/prj/fractcam'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

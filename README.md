@@ -1,3 +1,3 @@
 ## FracTCAM
 
-This implementation of FracTCAM by linjw is only used for masked match. 
+This implementation of FracTCAM by linjw is used for masked match in IP layer forwarding.

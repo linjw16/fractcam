@@ -43,6 +43,8 @@ reg [31:0] LUT5_C_L_reg = INIT_C, LUT5_C_L_next;
 reg [31:0] LUT5_D_H_reg = INIT_D >> 32, LUT5_D_H_next;
 reg [31:0] LUT5_D_L_reg = INIT_D, LUT5_D_L_next;
 
+reg dummy;
+
 assign DOA = {LUT5_A_H_reg[ADDRA],LUT5_A_L_reg[ADDRA]};
 assign DOB = {LUT5_B_H_reg[ADDRB],LUT5_B_L_reg[ADDRB]};
 assign DOC = {LUT5_C_H_reg[ADDRC],LUT5_C_L_reg[ADDRC]};
@@ -67,6 +69,7 @@ always @(*) begin
 		LUT5_D_H_next[ADDRD] = DID[1];
 		LUT5_D_L_next[ADDRD] = DID[0];
 	end
+	dummy = WCLK;
 end
 
 always @(posedge(WCLK)) begin	
