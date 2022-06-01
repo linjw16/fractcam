@@ -1,5 +1,7 @@
 __pycache__
 *.xml
 *.fst
+*.gtkw
 .fuse*
 .backup/
+.vscode
