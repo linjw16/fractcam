@@ -4,4 +4,4 @@ __pycache__
 *.gtkw
 .fuse*
 .backup/
-.vscode/
+.vscode/*
